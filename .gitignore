@@ -1,3 +1,4 @@
-.env
+venv/
+.git/
+*.zip
 __pycache__/
-*.pyc
