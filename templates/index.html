@@ -8,9 +8,21 @@
 <h2>Insurance Prediction App</h2>
 
 <form method="POST">
-    Age: <input name="age" type="number" required><br><br>
-    BMI: <input name="bmi" type="number" step="0.1" required><br><br>
-    Children: <input name="children" type="number" required><br><br>
+
+    Age:
+    <input name="age" type="number" required><br><br>
+
+    Sex:
+    <select name="sex">
+        <option value="male">male</option>
+        <option value="female">female</option>
+    </select><br><br>
+
+    BMI:
+    <input name="bmi" type="number" step="any" required><br><br>
+
+    Children:
+    <input name="children" type="number" required><br><br>
 
     Smoker:
     <select name="smoker">
@@ -18,11 +30,38 @@
         <option value="no">no</option>
     </select><br><br>
 
+    Claim Amount:
+    <input name="Claim_Amount" type="number" step="any" required><br><br>
+
+    Past Consultations:
+    <input name="past_consultations" type="number" required><br><br>
+
+    Number of Steps:
+    <input name="num_of_steps" type="number" required><br><br>
+
+    Hospital Expenditure:
+    <input name="Hospital_expenditure" type="number" step="any" required><br><br>
+
+    Number of Procedures:
+    <input name="Number_of_procedures" type="number" required><br><br>
+
+    Annual Salary:
+    <input name="Annual_Salary" type="number" step="any" required><br><br>
+
+    Region:
+    <select name="region">
+        <option value="southeast">southeast</option>
+        <option value="southwest">southwest</option>
+        <option value="northeast">northeast</option>
+        <option value="northwest">northwest</option>
+    </select><br><br>
+
     <button type="submit">Predict</button>
+
 </form>
 
 {% if result %}
-<h3>Predicted Insurance Cost: {{ result }}</h3>
+<h3>Prediction: {{ result }}</h3>
 {% endif %}
 
 {% if error %}
