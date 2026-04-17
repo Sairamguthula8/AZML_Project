@@ -23,7 +23,6 @@ def home():
 
     if request.method == "POST":
         try:
-            # Correct input format for Azure ML
             data = {
                 "input_data": {
                     "data": [[
@@ -35,21 +34,26 @@ def home():
                 }
             }
 
-            # Use json= (important)
             response = requests.post(url, headers=headers, json=data)
 
-            # Debug print (will show in logs)
             print("Response Status:", response.status_code)
             print("Response Text:", response.text)
 
             if response.status_code == 200:
                 res_json = response.json()
 
-                # Extract prediction safely
+                # Extract prediction cleanly
                 if isinstance(res_json, dict):
-                    result = res_json
+                    if "result" in res_json:
+                        result = res_json["result"]
+                    elif "predictions" in res_json:
+                        result = res_json["predictions"]
+                    elif "output" in res_json:
+                        result = res_json["output"]
+                    else:
+                        result = res_json
                 else:
-                    result = str(res_json)
+                    result = res_json
 
             else:
                 error = f"API Error {response.status_code}: {response.text}"
