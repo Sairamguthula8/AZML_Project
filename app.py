@@ -1,11 +1,10 @@
 from flask import Flask, request, render_template
 import requests
-import json
 import os
 
 app = Flask(__name__)
 
-# Get values from environment (best practice)
+# Environment variables
 url = os.getenv("ML_URL", "https://mlproject-ukaca.canadacentral.inference.ml.azure.com/score")
 api_key = os.getenv("API_KEY")
 
@@ -19,27 +18,41 @@ def home():
     result = None
     error = None
 
-    # 🔍 Check API key early (prevents crash)
     if not api_key:
-        return "❌ API_KEY not set in Azure App Service", 500
+        return "API_KEY not set in Azure App Service", 500
 
     if request.method == "POST":
         try:
+            # Correct input format for Azure ML
             data = {
-                "data": [[
-                    float(request.form["age"]),
-                    float(request.form["bmi"]),
-                    int(request.form["children"]),
-                    1 if request.form["smoker"] == "yes" else 0
-                ]]
+                "input_data": {
+                    "data": [[
+                        float(request.form["age"]),
+                        float(request.form["bmi"]),
+                        int(request.form["children"]),
+                        1 if request.form["smoker"] == "yes" else 0
+                    ]]
+                }
             }
 
-            response = requests.post(url, headers=headers, data=json.dumps(data))
+            # Use json= (important)
+            response = requests.post(url, headers=headers, json=data)
+
+            # Debug print (will show in logs)
+            print("Response Status:", response.status_code)
+            print("Response Text:", response.text)
 
             if response.status_code == 200:
-                result = response.json()
+                res_json = response.json()
+
+                # Extract prediction safely
+                if isinstance(res_json, dict):
+                    result = res_json
+                else:
+                    result = str(res_json)
+
             else:
-                error = f"API Error: {response.status_code} - {response.text}"
+                error = f"API Error {response.status_code}: {response.text}"
 
         except Exception as e:
             error = f"Exception: {str(e)}"
