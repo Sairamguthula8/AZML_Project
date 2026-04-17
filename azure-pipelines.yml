@@ -27,6 +27,10 @@ steps:
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/app.zip'
+    excludeFiles: |
+      venv/**
+      .git/**
+      *.zip
 
 - task: AzureWebApp@1
   inputs:
