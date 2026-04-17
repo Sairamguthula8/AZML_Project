@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Insurance Prediction</title>
+</head>
+<body>
+
+<h2>Insurance Prediction App</h2>
+
+<form method="POST">
+    Age: <input name="age"><br><br>
+    BMI: <input name="bmi"><br><br>
+    Children: <input name="children"><br><br>
+
+    Smoker:
+    <select name="smoker">
+        <option value="yes">yes</option>
+        <option value="no">no</option>
+    </select><br><br>
+
+    <button type="submit">Predict</button>
+</form>
+
+{% if result %}
+<h3>Prediction: {{ result }}</h3>
+{% endif %}
+
+</body>
+</html>
