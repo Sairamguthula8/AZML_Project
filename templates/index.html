@@ -8,9 +8,9 @@
 <h2>Insurance Prediction App</h2>
 
 <form method="POST">
-    Age: <input name="age" required><br><br>
-    BMI: <input name="bmi" required><br><br>
-    Children: <input name="children" required><br><br>
+    Age: <input name="age" type="number" required><br><br>
+    BMI: <input name="bmi" type="number" step="0.1" required><br><br>
+    Children: <input name="children" type="number" required><br><br>
 
     Smoker:
     <select name="smoker">
@@ -22,7 +22,7 @@
 </form>
 
 {% if result %}
-<h3>Prediction: {{ result }}</h3>
+<h3>Predicted Insurance Cost: {{ result }}</h3>
 {% endif %}
 
 {% if error %}
