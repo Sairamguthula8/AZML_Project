@@ -13,48 +13,52 @@ headers = {
     "Authorization": f"Bearer {api_key}"
 }
 
+
 @app.route("/", methods=["GET", "POST"])
 def home():
     result = None
     error = None
 
+    # Check API key
     if not api_key:
         return "API_KEY not set in Azure App Service", 500
 
     if request.method == "POST":
         try:
+            # ✅ Correct Azure ML payload (12 features)
             data = {
                 "input_data": {
+                    "columns": [
+                        "age", "sex", "bmi", "children", "smoker",
+                        "Claim_Amount", "past_consultations",
+                        "num_of_steps", "Hospital_expenditure",
+                        "Number_of_procedures", "Annual_Salary", "region"
+                    ],
                     "data": [[
                         float(request.form["age"]),
+                        request.form["sex"],
                         float(request.form["bmi"]),
                         int(request.form["children"]),
-                        1 if request.form["smoker"] == "yes" else 0
+                        request.form["smoker"],
+                        float(request.form["Claim_Amount"]),
+                        int(request.form["past_consultations"]),
+                        int(request.form["num_of_steps"]),
+                        float(request.form["Hospital_expenditure"]),
+                        int(request.form["Number_of_procedures"]),
+                        float(request.form["Annual_Salary"]),
+                        request.form["region"]
                     ]]
                 }
             }
 
+            # Send request
             response = requests.post(url, headers=headers, json=data)
 
-            print("Response Status:", response.status_code)
-            print("Response Text:", response.text)
+            print("Status:", response.status_code)
+            print("Response:", response.text)
 
             if response.status_code == 200:
-                res_json = response.json()
-
-                # Extract prediction cleanly
-                if isinstance(res_json, dict):
-                    if "result" in res_json:
-                        result = res_json["result"]
-                    elif "predictions" in res_json:
-                        result = res_json["predictions"]
-                    elif "output" in res_json:
-                        result = res_json["output"]
-                    else:
-                        result = res_json
-                else:
-                    result = res_json
-
+                result = response.json()
             else:
                 error = f"API Error {response.status_code}: {response.text}"
 
